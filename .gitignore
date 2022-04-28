@@ -1,0 +1,5 @@
+.idea
+vendor
+domains.txt
+data.csv
+*.log
