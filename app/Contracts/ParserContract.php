@@ -8,5 +8,5 @@ use App\Dto\WayBackResponseDto;
 
 interface ParserContract
 {
-    public function parse(string $url): WayBackResponseDto;
+    public function parse(string $url): ?WayBackResponseDto;
 }

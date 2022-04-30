@@ -221,12 +221,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "5c693242bede743c23402bc5b9de62da04a882d7"
+                "reference": "58a607de30248bdbb28655d5d46661de5efd727c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c693242bede743c23402bc5b9de62da04a882d7",
-                "reference": "5c693242bede743c23402bc5b9de62da04a882d7",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/58a607de30248bdbb28655d5d46661de5efd727c",
+                "reference": "58a607de30248bdbb28655d5d46661de5efd727c",
                 "shasum": ""
             },
             "require": {
@@ -329,7 +329,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-24T01:07:58+00:00"
+            "time": "2022-04-28T17:45:01+00:00"
         },
         {
             "name": "psr/http-client",

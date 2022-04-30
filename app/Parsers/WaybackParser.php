@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Parsers;
 
 use App\Contracts\ParserContract;
@@ -14,13 +12,18 @@ class WaybackParser implements ParserContract
 {
     private string $baseUrl = 'http://archive.org/wayback/available?';
 
-    public function parse(string $url): WayBackResponseDto
-    {
-        $dto = (new WayBackResponseDto());
+    public function __construct(private string $timestamp) {}
 
+    public function parse(string $url): ?WayBackResponseDto
+    {
         try {
+            $dto = (new WayBackResponseDto());
+
             $response = $this->getClient()
-                ->get($this->baseUrl . http_build_query(['url' => $url]))
+                ->get($this->baseUrl . http_build_query([
+                        'url' => $url,
+                        'timestamp' => $this->timestamp
+                    ]))
                 ->getBody()
                 ->getContents();
 
@@ -34,21 +37,16 @@ class WaybackParser implements ParserContract
                         ?->timestamp
                         ? (int)date('Y', strtotime($response->archived_snapshots->closest->timestamp))
                         : null)
-                ->setSnapshotUrl($response?->archived_snapshots?->closest?->url);
+                ->setSnapshotUrl($response?->archived_snapshots?->closest?->url)
+                ->setTitle($this->extractTitle($dto->getSnapshotUrl() ?? 'Not found'));
 
+            return $dto;
         } catch (GuzzleException $exception) {
             (new LogWriter())
-                ->write(sprintf('Wayback unavailable. Reason: %s', $exception->getMessage()));
+                ->write(sprintf('Wayback machine for url: %s, says: %s', $url, $exception->getMessage()));
         }
 
-        try {
-            $dto->setTitle($this->extractTitle($url));
-        } catch (GuzzleException $exception) {
-            (new LogWriter())
-                ->write(sprintf('Тайтл сайта %s не получили по причине: %s', $url, $exception->getMessage()));
-        }
-
-        return $dto;
+        return null;
     }
 
     private function extractTitle(string $url): ?string
