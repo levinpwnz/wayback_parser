@@ -2,13 +2,11 @@
 
 namespace App\Parsers;
 
-use App\Contracts\ParserContract;
 use App\Dto\WayBackResponseDto;
 use App\Log\LogWriter;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
-class WaybackParser implements ParserContract
+class WaybackParser extends AbstractParser
 {
     private string $baseUrl = 'http://archive.org/wayback/available?';
 
@@ -19,7 +17,7 @@ class WaybackParser implements ParserContract
         try {
             $dto = (new WayBackResponseDto());
 
-            $response = $this->getClient()
+            $response = $this->getClient(false)
                 ->get($this->baseUrl . http_build_query([
                         'url' => $url,
                         'timestamp' => $this->timestamp
@@ -52,7 +50,7 @@ class WaybackParser implements ParserContract
     private function extractTitle(string $url): ?string
     {
         $body = $this
-            ->getClient()
+            ->getClient(false)
             ->get($url)
             ->getBody()
             ->getContents();
@@ -68,12 +66,5 @@ class WaybackParser implements ParserContract
         $title = preg_replace('/\s+/', ' ', $title[1]);
 
         return trim($title);
-    }
-
-    private function getClient(): Client
-    {
-        return (new Client([
-            'verify' => false
-        ]));
     }
 }
