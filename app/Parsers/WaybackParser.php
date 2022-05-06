@@ -36,7 +36,7 @@ class WaybackParser extends AbstractParser
                         ? (int)date('Y', strtotime($response->archived_snapshots->closest->timestamp))
                         : null)
                 ->setSnapshotUrl($response?->archived_snapshots?->closest?->url)
-                ->setTitle($this->extractTitle($dto->getSnapshotUrl() ?? 'Not found'));
+                ->setTitle($this->extractTitle($dto->getSnapshotUrl()));
 
             return $dto;
         } catch (GuzzleException $exception) {
@@ -45,26 +45,5 @@ class WaybackParser extends AbstractParser
         }
 
         return null;
-    }
-
-    private function extractTitle(string $url): ?string
-    {
-        $body = $this
-            ->getClient()
-            ->get($url)
-            ->getBody()
-            ->getContents();
-
-        $possibleTitle = preg_match("/<title>(.*)<\/title>/siU", $body, $title);
-
-        unset($body);
-
-        if (!$possibleTitle) {
-            return null;
-        }
-
-        $title = preg_replace('/\s+/', ' ', $title[1]);
-
-        return trim($title);
     }
 }
