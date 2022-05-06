@@ -17,7 +17,7 @@ class WaybackParser extends AbstractParser
         try {
             $dto = (new WayBackResponseDto());
 
-            $response = $this->getClient(false)
+            $response = $this->getClient()
                 ->get($this->baseUrl . http_build_query([
                         'url' => $url,
                         'timestamp' => $this->timestamp
@@ -50,7 +50,7 @@ class WaybackParser extends AbstractParser
     private function extractTitle(string $url): ?string
     {
         $body = $this
-            ->getClient(false)
+            ->getClient()
             ->get($url)
             ->getBody()
             ->getContents();

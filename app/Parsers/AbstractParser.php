@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 
 abstract class AbstractParser implements ParserContract
 {
-    protected function getClient(bool $verify): Client
+    protected function getClient(bool $verify = false): Client
     {
         return (new Client([
             'verify' => $verify
